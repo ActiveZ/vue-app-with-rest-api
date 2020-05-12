@@ -9,17 +9,24 @@
     <body>
     <main id="main">
         <div id="divVille">
+            <!-- villes disponibles:  http://www.prevision-meteo.ch/services/json/list-cities -->
                 <p><h1>
                 <label for="api">Ville: </label>
                 <select v-model="selected" name="api" id="api">
                     <option disabled value="">Choisissez</option>
                     <option value="nantes">Nantes</option>
                     <option value="paris">Paris</option>
-                    <!-- <option value="" ></option>    -->
+                    <option value="marseille" >Marseille</option>
+                    <option value="lyon" >Lyon</option>
+                    <option value="toulouse" >Toulouse</option>
+                    <option value="nice" >Nice</option>
+                    <option value="montpellier" >Montpellier</option>
+                    <option value="strasbourg" >Strasbourg</option>
+                    <option value="bordeaux" >Bordeaux</option>
+                    <option value="lille" >Lille</option>
                 </select>
                 </h1></p>
             </div>
-            <span>Sélectionné : {{ selected }}</span>
 
             {{donneesMeteo}}
 
@@ -27,8 +34,8 @@
 
         <div id="divMeteo">
             <h2 id="villeMeteo"></h2>
+            <p id="gps"></p>
             <table id="tableMeteo"></table>
-            <p id="meteo"></p>
         </div>
     </main>
 
@@ -39,56 +46,54 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
 
 <script>
-//meteo("nantes"); //ville par défaut au démarrage
-
 var meteoApi = new Vue({
     el: "#main",
     
     data: {
-        selected: "nantes"
+        selected: "nantes", //ville par défaut au démarrage
+        donneesMeteo: "" // inutilisé
     },
 
     mounted: function () {
 		    this.meteo() //ville par défaut au démarrage = "nantes"
 		  },
 
-    computed: {
+    computed: { //maj à chaque changement de la valeur du select
         donneesMeteo: function() {
-            const ville = this.selected 
-            donnees = this.meteo(ville)
-            return donnees
+            this.meteo(this.selected);
+            return "";
         }
     },
+    
     methods: {
 
         //Afficher la météo de la ville appelée avec AJAX (version JS natif)
-        meteo:function(selected) {
-        let req = "https://www.prevision-meteo.ch/services/json/" + selected;
+        meteo:function(varVille) {
+        let req = "https://www.prevision-meteo.ch/services/json/" + varVille;
 
-        alert(req);
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 let data = JSON.parse(this.responseText);
                 //console.log(data);
                 document.getElementById("villeMeteo").innerHTML = "METEO DE " + data.city_info.name.toUpperCase();
-                document.getElementById("meteo").innerHTML = "Ville: " + data.city_info.name 
-                + " (latitude: " + data.city_info.latitude 
-                + " longitude: " + data.city_info.longitude + ")" + "<br>";
+                document.getElementById("gps").innerHTML = "(latitude: " + data.city_info.latitude 
+                    + " longitude: " + data.city_info.longitude + ")" + "<br>";
 
-                let render = "";
+                let result = "";
                 let i = 0;
                 let libelle = ["Date", "Heure", "Température", "Vitesse du vent", "Rafales","Direction du vent", "Pression atmosphérique", "Humidité", "Conditions"];
+                let unite = ["", "", " °C", " Km/h", " Km/h", "", " hPa", " %", ""];
                 for (x in data.current_condition) {
                     if (i<libelle.length) {
-                        render += "<tr>";
-                        render += "<td>"+ libelle[i] +"</td>";
+                        result += "<tr>";
+                        result += "<td>"+ libelle[i] +"</td>";
+                        result += "<td>"+ data.current_condition[x] + unite[i] + "</td>";
+                        result += "</tr>";
                         i++;
-                        render += "<td>"+ data.current_condition[x] +"</td>";
-                        render += "</tr>";
                     }  
                 }
-                document.getElementById("tableMeteo").innerHTML = render;
+                document.getElementById("tableMeteo").innerHTML = result;
             }
         };
         xhttp.open("GET", req, true);
@@ -96,10 +101,6 @@ var meteoApi = new Vue({
         }  
     }
 });
-
-    
-
-
 </script>
 
 </body>
