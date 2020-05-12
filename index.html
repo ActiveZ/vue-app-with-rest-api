@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <title>API météo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/css.css">
+    </head>
+
+    <body>
+    <div id="divVille">
+            <p> <h1>
+            <label for="api">Choisissez votre ville: </label>
+            <select name="api" id="api" onChange="meteo(this.value)">
+                <option value="nantes">Nantes</option>
+                <option value="paris">Paris</option>
+                <option value="" ></option>   
+            </select>
+            </h1></p>
+        </div>
+        
+    <!-- affiche la météo de la ville appelée -->
+
+    <div id="divMeteo">
+        <h2 id="villeMeteo"></h2>
+        <table id="tableMeteo"></table>
+        <p id="meteo"></p>
+    </div>
+
+<!-- ************************************************************* -->
+<!----------------------------- SCRIPTS ----------------------------->
+<!-- ************************************************************* -->
+
+<script>
+meteo("nantes"); //ville par défaut au démarrage
+    
+//Afficher la météo de la ville appelée avec AJAX (version JS natif)
+function meteo(villeMeteo) {
+    let req = "https://www.prevision-meteo.ch/services/json/" + villeMeteo;
+
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let data = JSON.parse(this.responseText);
+            //console.log(data);
+            document.getElementById("villeMeteo").innerHTML = "METEO DE " + data.city_info.name.toUpperCase();
+            document.getElementById("meteo").innerHTML = "Ville: " + data.city_info.name 
+            + " (latitude: " + data.city_info.latitude 
+            + " longitude: " + data.city_info.longitude + ")" + "<br>";
+
+            let render = "";
+            let i = 0;
+            let libelle = ["Date", "Heure", "Température", "Vitesse du vent", "Rafales","Direction du vent", "Pression atmosphérique", "Humidité", "Conditions"];
+            for (x in data.current_condition) {
+                if (i<libelle.length) {
+                    render += "<tr>";
+                    render += "<td>"+ libelle[i] +"</td>";
+                    i++;
+                    render += "<td>"+ data.current_condition[x] +"</td>";
+                    render += "</tr>";
+                }  
+            }
+            document.getElementById("tableMeteo").innerHTML = render;
+        }
+    };
+    xhttp.open("GET", req, true);
+    xhttp.send();
+}  
+
+</script>
+
+</body>
+</html>
