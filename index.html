@@ -20,7 +20,9 @@
                 </h1></p>
             </div>
             <span>Sélectionné : {{ selected }}</span>
-            
+
+            {{donneesMeteo}}
+
         <!-- affiche la météo de la ville appelée -->
 
         <div id="divMeteo">
@@ -50,10 +52,17 @@ var meteoApi = new Vue({
 		    this.meteo() //ville par défaut au démarrage = "nantes"
 		  },
 
+    computed: {
+        donneesMeteo: function() {
+            const ville = this.selected 
+            donnees = this.meteo(ville)
+            return donnees
+        }
+    },
     methods: {
 
         //Afficher la météo de la ville appelée avec AJAX (version JS natif)
-        meteo:function() {
+        meteo:function(selected) {
         let req = "https://www.prevision-meteo.ch/services/json/" + selected;
 
         alert(req);
