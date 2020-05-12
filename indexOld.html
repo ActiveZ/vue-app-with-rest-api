@@ -18,9 +18,9 @@
                     <!-- <option value="" ></option>    -->
                 </select>
                 </h1></p>
+                <span>Sélectionné : {{ selected }}</span>
             </div>
-            <span>Sélectionné : {{ selected }}</span>
-            
+
         <!-- affiche la météo de la ville appelée -->
 
         <div id="divMeteo">
@@ -39,16 +39,16 @@
 <script>
 //meteo("nantes"); //ville par défaut au démarrage
 
-var meteoApi = new Vue({
+var meteoApi = new Vue ({
     el: "#main",
     
     data: {
-        selected: "nantes"
+        selected: ""
     },
 
-    mounted: function () {
-		    this.meteo() //ville par défaut au démarrage = "nantes"
-		  },
+    // mounted: function () {
+	// 	    this.meteo() //ville par défaut au démarrage = "nantes"
+	// 	  },
 
     methods: {
 
