@@ -9,11 +9,10 @@
         <link rel="stylesheet" href="css/css.css">
     </head>
     <body>
-    <!-- <body style="background-image: URL('images/sun.jpg')"> -->
-        <main id="main" >
+    <main id="main">
         <div id="divVille">
             <!-- villes disponibles:  http://www.prevision-meteo.ch/services/json/list-cities -->
-                <h1>
+                <p><h1>
                 <label for="api">Ville: </label>
                 <select v-model="selected" name="api" id="api">
                     <option disabled value="">Choisissez</option>
@@ -28,30 +27,22 @@
                     <option value="bordeaux" >Bordeaux</option>
                     <option value="lille" >Lille</option>
                 </select>
-                </h1>
+                </h1></p>
             </div>
 
+            
             <!-- affiche la météo de la ville appelée -->
-            <!-- tableau moche => TODO: tableau version Vue.js-->
-            <div id="divMeteo" v-if="display">
-                <h2 id="villeMeteo">{{ villeMeteo }}</h2>
-                <p id="gps"> {{ gps }}</p>
-                <div id="tableMeteo">
-                    Date: {{ donneesMeteo.date}} <br>
-                    Heure: {{ donneesMeteo.hour}} <br>
-                    Température: {{ donneesMeteo.tmp}} °C<br>
-                    vitesse du vent: {{ donneesMeteo.wnd_spd}} Km/h<br>
-                    Rafales: {{ donneesMeteo.wnd_gust}} Km/h<br>
-                    Direction du vent: {{ donneesMeteo.wnd_dir}} <br>
-                    Pression atmosphérique: {{ donneesMeteo.pressure}} hPa <br>
-                    Humidité: {{ donneesMeteo.humidity}} % <br>
-                    Condition: {{ donneesMeteo.condition }} <br>
-                </div>
+            
+            <div id="divMeteo">
+                <h2 id="villeMeteo"></h2>
+                <p id="gps"></p>
+                <table id="tableMeteo"></table>
             </div>
 
-            <!-- spin-loader d'attente -->
-            <div id="loader" v-if="!display"></div>
+            <!-- spinner d'attente -->
+            <div id="loader"></div>
 
+            {{donneesMeteo}} <!-- Débarassez-moi de ce truc !!! -->
     </main>
 
 <!-- ************************************************************* -->
@@ -66,71 +57,81 @@ var meteoApi = new Vue({
     
     data: {
         selected: "nantes", //ville par défaut au démarrage
-        donneesMeteo: {},
-        display: false,
-        // styleFond: "images/sun.jpg"
+        donneesMeteo: "" // inutilisé
     },
 
     mounted: function () {
-		    this.meteo() // avec ville par défaut au démarrage = "nantes"
+		    this.meteo() //ville par défaut au démarrage = "nantes"
 		  },
 
-    watch: {
-        selected: function (val) {
-        this.meteo()
+    computed: { //maj à chaque changement de la valeur du select
+        donneesMeteo: function() {
+            this.meteo(this.selected);
+            return "";
         }
     },
-
+// code tout pourri: fusionner computed et methods !!!
     methods: {
 
-        meteo:function() {
+        //Afficher la météo de la ville appelée avec AJAX (version JS natif)
+        meteo:function(varVille) {
+        document.getElementById("loader").style.display = "block"; //affichage du spinner d'attente
+        document.getElementById("divMeteo").style.display = "none";
 
-        let req = "https://www.prevision-meteo.ch/services/json/" + this.selected;
-        let self = this;
+        let req = "https://www.prevision-meteo.ch/services/json/" + varVille;
+
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 let data = JSON.parse(this.responseText);
                 //console.log(data);
-                //console.log(data.current_condition);
-                villeMeteo = "METEO DE " + data.city_info.name.toUpperCase();
-                gps = "(latitude: " + data.city_info.latitude 
-                    + " - longitude: " + data.city_info.longitude + ")";
+                document.getElementById("villeMeteo").innerHTML = "METEO DE " + data.city_info.name.toUpperCase();
+                document.getElementById("gps").innerHTML = "(latitude: " + data.city_info.latitude 
+                    + " longitude: " + data.city_info.longitude + ")" + "<br>";
 
-                self.donneesMeteo = data.current_condition;
-                // affichage de l'image de fond dans le body
-                selectBackgroundImage (data.current_condition.condition);
-                self.display = true;
+                let result = "";
+                let i = 0;
+                let libelle = ["Date", "Heure", "Température", "Vitesse du vent", "Rafales","Direction du vent", "Pression atmosphérique", "Humidité", "Conditions"];
+                let unite = ["", "", " °C", " Km/h", " Km/h", "", " hPa", " %", ""];
+                for (x in data.current_condition) {
+                    if (i<libelle.length) {
+                        result += "<tr>";
+                        result += "<td>"+ libelle[i] +"</td>";
+                        result += "<td>"+ data.current_condition[x] + unite[i] + "</td>";
+                        result += "</tr>";
+                        //console.log("data: " + x);
+                        //console.log("condition: " + data.current_condition.condition);
+                        selectBackgroundImage(data.current_condition.condition);
+                        i++;
+                    }  
+                }
+                document.getElementById("tableMeteo").innerHTML = result;
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("divMeteo").style.display = "block";
             }
         };
         xhttp.open("GET", req, true);
         xhttp.send();
         }
 
-
         // pourquoi l'appel à cette fonction ne marche pas ? => je la sors en js natif en dessous
         // //selection de l'image de fond selon les conditions météo
         // selectBackgroundImage: function(condition) {
         //     console.log(condition);
-        //     alert ("ok2");
         // }
+
+
     }
 });
-        // TODO version Vue.js
-        //selection de l'image de fond dans le body selon les conditions météo
+
+        //selection de l'image de fond selon les conditions météo
         function selectBackgroundImage (condition) {
-            // console.log(condition);
-            condition = "Ensoleillé";
-            //condition = "Fortement nuageux";
-            //alert("ok");
+            //console.log(condition);
             let doc = document.body.style;
-            //return "URL('images/sun.jpg')";
-        
             switch (condition) {
                 case "Ensoleillé":
                 case "Faiblement nuageux":
                 doc.backgroundImage = "URL('images/sun.jpg')";
-                //return 'images/sun.jpg';
                 break;
 
                 case "Eclaircies":
