@@ -126,13 +126,22 @@ var meteoApi = new Vue({
 
         //selection de l'image de fond selon les conditions météo
         function selectBackgroundImage (condition) {
-            console.log(condition);
+            //console.log(condition);
             let doc = document.body.style;
             switch (condition) {
+                case "Ensoleillé":
                 case "Faiblement nuageux":
-                doc.backgroundImage = "URL('images/sun-3588618_1920.jpg')";
+                doc.backgroundImage = "URL('images/sun.jpg')";
                 break;
-                
+
+                case "Eclaircies":
+                doc.backgroundImage = "URL('images/eclaircie.jpg')";
+                break;
+
+                case "Fortement nuageux":
+                doc.backgroundImage = "URL('images/cumulus.jpg')";
+                break;
+
                 default:
                 doc.backgroundImage = 'linear-gradient(red, yellow)';
             }

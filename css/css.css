@@ -2,7 +2,8 @@ body {
     height: 740px;
     /*background-color: red;*/
     /*background-image: linear-gradient(red, yellow); /*pitain, ca pique les yeux !!!*/
-    /*background-image: url(../images/sun-3588618_1920.jpg);*/
+    /*background-image: url(../images/sun.jpg);*/
+    background-size: cover;
 }
 
 main {
@@ -18,6 +19,8 @@ main {
     border-radius: 20px;
     padding: 10px;
     /* background-color: aqua; */
+    background-color: rgb(245, 245, 73);
+    opacity: 0.8;
 }
 
 #tableMeteo {
