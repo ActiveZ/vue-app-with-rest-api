@@ -33,15 +33,6 @@
 
             
             <!-- affiche la météo de la ville appelée -->
-<!--             
-            <div id="divMeteo">
-
-                <h2 id="villeMeteo"></h2>
-                <p id="gps"></p>
-                <table id="tableMeteo"></table>
-
-            </div> -->
-
             {{ display }}
             <div >
                 {{ donneesMeteo }}
@@ -64,73 +55,23 @@ var meteoApi = new Vue({
     
     data: {
         selected: "nantes", //ville par défaut au démarrage
-        donneesMeteo: {}, // inutilisé
+        //donneesMeteo: {}, // inutilisé
         display: false
     },
 
     mounted: function () {
-		    // this.meteo() //ville par défaut au démarrage = "nantes"
-		    this.meteo2() //ville par défaut au démarrage = "nantes"
+		    this.meteo() //ville par défaut au démarrage = "nantes"
 		  },
 
-    // computed: { //maj à chaque changement de la valeur du select
-    //     donneesMeteo: function() {
-    //         return this.meteo2(this.selected);
-    //         //return "";
-    //     }
-    //},
-// code tout pourri: fusionner computed et methods !!!
-
-watch: {
-    selected: function (val) {
-      this.meteo2()
-    }
+    watch: {
+        selected: function (val) {
+        this.meteo()
+        }
     },
 
     methods: {
 
-        //Afficher la météo de la ville appelée avec AJAX (version JS natif)
-        // meteo:function(varVille) {
-        // document.getElementById("loader").style.display = "block"; //affichage du spinner d'attente
-        // document.getElementById("divMeteo").style.display = "none";
-
-        // let req = "https://www.prevision-meteo.ch/services/json/" + varVille;
-
-        // let xhttp = new XMLHttpRequest();
-        // xhttp.onreadystatechange = function() {
-        //     if (this.readyState == 4 && this.status == 200) {
-        //         let data = JSON.parse(this.responseText);
-        //         //console.log(data);
-        //         document.getElementById("villeMeteo").innerHTML = "METEO DE " + data.city_info.name.toUpperCase();
-        //         document.getElementById("gps").innerHTML = "(latitude: " + data.city_info.latitude 
-        //             + " longitude: " + data.city_info.longitude + ")" + "<br>";
-
-        //         let result = "";
-        //         let i = 0;
-        //         let libelle = ["Date", "Heure", "Température", "Vitesse du vent", "Rafales","Direction du vent", "Pression atmosphérique", "Humidité", "Conditions"];
-        //         let unite = ["", "", " °C", " Km/h", " Km/h", "", " hPa", " %", ""];
-        //         for (x in data.current_condition) {
-        //             if (i<libelle.length) {
-        //                 result += "<tr>";
-        //                 result += "<td>"+ libelle[i] +"</td>";
-        //                 result += "<td>"+ data.current_condition[x] + unite[i] + "</td>";
-        //                 result += "</tr>";
-        //                 //console.log("data: " + x);
-        //                 //console.log("condition: " + data.current_condition.condition);
-        //                 selectBackgroundImage(data.current_condition.condition);
-        //                 i++;
-        //             }  
-        //         }
-        //         document.getElementById("tableMeteo").innerHTML = result;
-        //         document.getElementById("loader").style.display = "none";
-        //         document.getElementById("divMeteo").style.display = "block";
-        //     }
-        // };
-        // xhttp.open("GET", req, true);
-        // xhttp.send();
-        // },
-
-        meteo2:function() {
+        meteo:function() {
         //document.getElementById("loader").style.display = "block"; //affichage du spinner d'attente
         //document.getElementById("divMeteo").style.display = "none";
 
@@ -170,12 +111,10 @@ watch: {
 
         //selection de l'image de fond selon les conditions météo
         function selectBackgroundImage (condition) {
-            //console.log(condition);
-            alert("oj");
+            console.log(condition);
             // let doc = document.body.style;
             return "URL('images/sun.jpg')";
         
-
             switch (condition) {
                 case "Ensoleillé":
                 case "Faiblement nuageux":
@@ -198,32 +137,7 @@ watch: {
                 doc.backgroundImage = 'linear-gradient(red, yellow)';
             }
         }
-        //selection de l'image de fond selon les conditions météo
-        function selectBackgroundImageOld (condition) {
-            //console.log(condition);
-            let doc = document.body.style;
-            switch (condition) {
-                case "Ensoleillé":
-                case "Faiblement nuageux":
-                doc.backgroundImage = "URL('images/sun.jpg')";
-                break;
 
-                case "Eclaircies":
-                doc.backgroundImage = "URL('images/eclaircie.jpg')";
-                break;
-
-                case "Fortement nuageux":
-                doc.backgroundImage = "URL('images/cumulus.jpg')";
-                break;
-
-                case 'Faiblement orageux':
-                doc.backgroundImage = "URL('images/storm-clouds.jpg')";
-                break;
-
-                default:
-                doc.backgroundImage = 'linear-gradient(red, yellow)';
-            }
-        }
 </script>
 
 
