@@ -3,7 +3,7 @@ body {
     /*background-color: red;*/
     /*background-image: linear-gradient(red, yellow); /*pitain, ca pique les yeux !!!*/
     /*background-image: url(../images/sun.jpg);*/
-    background-size: cover;
+    /*background-size: cover;*/
 }
 
 main {
@@ -26,6 +26,8 @@ main {
 #tableMeteo {
     text-align: left;
 }
+
+/*-------------- spin-loader -----------------*/
 
 /* Centre et fait tourner le loader */
 #loader {

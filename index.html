@@ -9,7 +9,9 @@
         <link rel="stylesheet" href="css/css.css">
     </head>
     <body>
-    <main id="main" v-if="display" :style="'background-image: ' + selectBackgroundImage(donneesMeteo.condition);">
+    <main id="main">
+        <!-- <main id="main" style="background-image: URL('images/sun.jpg')"> -->
+        <!-- <main id="main" v-if="display" :style="'background-image: ' + selectBackgroundImage(donneesMeteo.condition);"> -->
         <!-- <main id="main" v-if="display" :style="background-image: url(selectBackgroundImage(this.donneesMeteo.condition));"> -->
         <div id="divVille">
             <!-- villes disponibles:  http://www.prevision-meteo.ch/services/json/list-cities -->
@@ -55,12 +57,12 @@ var meteoApi = new Vue({
     
     data: {
         selected: "nantes", //ville par défaut au démarrage
-        //donneesMeteo: {}, // inutilisé
+        donneesMeteo: {}, // inutilisé
         display: false
     },
 
     mounted: function () {
-		    this.meteo() //ville par défaut au démarrage = "nantes"
+		    this.meteo() // avec ville par défaut au démarrage = "nantes"
 		  },
 
     watch: {
@@ -83,7 +85,7 @@ var meteoApi = new Vue({
             if (this.readyState == 4 && this.status == 200) {
                 let data = JSON.parse(this.responseText);
                 console.log(data);
-                // console.log(data.current_condition);
+                console.log(data.current_condition);
                 let result = data.current_condition;
                 //console.log ("result: " + result);
                 self.donneesMeteo = result;
@@ -113,12 +115,12 @@ var meteoApi = new Vue({
         function selectBackgroundImage (condition) {
             console.log(condition);
             // let doc = document.body.style;
-            return "URL('images/sun.jpg')";
+            //return "URL('images/sun.jpg')";
         
             switch (condition) {
                 case "Ensoleillé":
                 case "Faiblement nuageux":
-                return 'images/sun.jpg';
+                //return 'images/sun.jpg';
                 break;
 
                 case "Eclaircies":
