@@ -1,7 +1,8 @@
 body {
     height: 740px;
-    background-color: red;
-    background-image: linear-gradient(red, yellow); /*putain, ca pique les yeux !!!*/
+    /*background-color: red;*/
+    /*background-image: linear-gradient(red, yellow); /*pitain, ca pique les yeux !!!*/
+    /*background-image: url(../images/sun-3588618_1920.jpg);*/
 }
 
 main {

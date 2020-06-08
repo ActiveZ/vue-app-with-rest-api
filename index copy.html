@@ -99,9 +99,6 @@ var meteoApi = new Vue({
                         result += "<td>"+ libelle[i] +"</td>";
                         result += "<td>"+ data.current_condition[x] + unite[i] + "</td>";
                         result += "</tr>";
-                        //console.log("data: " + x);
-                        //console.log("condition: " + data.current_condition.condition);
-                        selectBackgroundImage(data.current_condition.condition);
                         i++;
                     }  
                 }
@@ -112,34 +109,10 @@ var meteoApi = new Vue({
         };
         xhttp.open("GET", req, true);
         xhttp.send();
-        }
-
-        // pourquoi l'appel à cette fonction ne marche pas ? => je la sors en js natif en dessous
-        // //selection de l'image de fond selon les conditions météo
-        // selectBackgroundImage: function(condition) {
-        //     console.log(condition);
-        // }
-
-
+        }  
     }
 });
-
-        //selection de l'image de fond selon les conditions météo
-        function selectBackgroundImage (condition) {
-            console.log(condition);
-            let doc = document.body.style;
-            switch (condition) {
-                case "Faiblement nuageux":
-                doc.backgroundImage = "URL('images/sun-3588618_1920.jpg')";
-                break;
-                
-                default:
-                doc.backgroundImage = 'linear-gradient(red, yellow)';
-            }
-        }
-
 </script>
-
 
 </body>
 </html>
