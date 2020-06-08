@@ -3,7 +3,7 @@ body {
     /*background-color: red;*/
     /*background-image: linear-gradient(red, yellow); /*pitain, ca pique les yeux !!!*/
     /*background-image: url(../images/sun.jpg);*/
-    /*background-size: cover;*/
+    background-size: cover;
 }
 
 main {
@@ -14,11 +14,10 @@ main {
 }
 
 #divMeteo {
-    display: block;
+    /* display: block; */
     border: ridge 20px;
     border-radius: 20px;
     padding: 10px;
-    /* background-color: aqua; */
     background-color: rgb(245, 245, 73);
     opacity: 0.8;
 }
@@ -31,7 +30,7 @@ main {
 
 /* Centre et fait tourner le loader */
 #loader {
-    display: block;
+    /* display: block; */
     position: absolute;
     left: 50%;
     top: 37%;

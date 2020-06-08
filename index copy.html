@@ -8,11 +8,14 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/css.css">
     </head>
-    <body>
-    <main id="main">
+    <body style="background-image: URL('images/sun.jpg')">
+    <!-- <main id="main"> -->
+        <main id="main" >
+        <!-- <main id="main" v-if="display" :style="'background-image: ' + selectBackgroundImage(donneesMeteo.condition);"> -->
+        <!-- <main id="main" v-if="display" :style="background-image: url(selectBackgroundImage(this.donneesMeteo.condition));"> -->
         <div id="divVille">
             <!-- villes disponibles:  http://www.prevision-meteo.ch/services/json/list-cities -->
-                <p><h1>
+                <h1>
                 <label for="api">Ville: </label>
                 <select v-model="selected" name="api" id="api">
                     <option disabled value="">Choisissez</option>
@@ -27,22 +30,19 @@
                     <option value="bordeaux" >Bordeaux</option>
                     <option value="lille" >Lille</option>
                 </select>
-                </h1></p>
+                </h1>
             </div>
 
             
             <!-- affiche la météo de la ville appelée -->
-            
-            <div id="divMeteo">
-                <h2 id="villeMeteo"></h2>
-                <p id="gps"></p>
-                <table id="tableMeteo"></table>
+            {{ display }}
+            <div id="divMeteo" v-if="display">
+                {{ donneesMeteo }}
             </div>
 
             <!-- spinner d'attente -->
-            <div id="loader"></div>
+            <div id="loader" v-if="!display"></div>
 
-            {{donneesMeteo}} <!-- Débarassez-moi de ce truc !!! -->
     </main>
 
 <!-- ************************************************************* -->
@@ -57,62 +57,84 @@ var meteoApi = new Vue({
     
     data: {
         selected: "nantes", //ville par défaut au démarrage
-        donneesMeteo: "" // inutilisé
+        donneesMeteo: {}, // inutilisé
+        display: false
     },
 
     mounted: function () {
-		    this.meteo() //ville par défaut au démarrage = "nantes"
+		    this.meteo() // avec ville par défaut au démarrage = "nantes"
 		  },
 
-    computed: { //maj à chaque changement de la valeur du select
-        donneesMeteo: function() {
-            this.meteo(this.selected);
-            return "";
+    watch: {
+        selected: function (val) {
+        this.meteo()
         }
     },
-// code tout pourri: fusionner computed et methods !!!
+
     methods: {
 
-        //Afficher la météo de la ville appelée avec AJAX (version JS natif)
-        meteo:function(varVille) {
-        document.getElementById("loader").style.display = "block"; //affichage du spinner d'attente
-        document.getElementById("divMeteo").style.display = "none";
+        meteo:function() {
 
-        let req = "https://www.prevision-meteo.ch/services/json/" + varVille;
-
+        let req = "https://www.prevision-meteo.ch/services/json/" + this.selected;
+        let self = this;
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 let data = JSON.parse(this.responseText);
                 //console.log(data);
-                document.getElementById("villeMeteo").innerHTML = "METEO DE " + data.city_info.name.toUpperCase();
-                document.getElementById("gps").innerHTML = "(latitude: " + data.city_info.latitude 
-                    + " longitude: " + data.city_info.longitude + ")" + "<br>";
-
-                let result = "";
-                let i = 0;
-                let libelle = ["Date", "Heure", "Température", "Vitesse du vent", "Rafales","Direction du vent", "Pression atmosphérique", "Humidité", "Conditions"];
-                let unite = ["", "", " °C", " Km/h", " Km/h", "", " hPa", " %", ""];
-                for (x in data.current_condition) {
-                    if (i<libelle.length) {
-                        result += "<tr>";
-                        result += "<td>"+ libelle[i] +"</td>";
-                        result += "<td>"+ data.current_condition[x] + unite[i] + "</td>";
-                        result += "</tr>";
-                        i++;
-                    }  
-                }
-                document.getElementById("tableMeteo").innerHTML = result;
-                document.getElementById("loader").style.display = "none";
-                document.getElementById("divMeteo").style.display = "block";
+                //console.log(data.current_condition);
+                self.donneesMeteo = data.current_condition;
+                // let result = data.current_condition;
+                //self.donneesMeteo = result;
+                self.display = true;
             }
         };
         xhttp.open("GET", req, true);
         xhttp.send();
-        }  
+        }
+
+
+        // pourquoi l'appel à cette fonction ne marche pas ? => je la sors en js natif en dessous
+        // //selection de l'image de fond selon les conditions météo
+        // selectBackgroundImage: function(condition) {
+        //     console.log(condition);
+        // }
+
+
     }
 });
+
+        //selection de l'image de fond selon les conditions météo
+        function selectBackgroundImage (condition) {
+            console.log(condition);
+            // let doc = document.body.style;
+            //return "URL('images/sun.jpg')";
+        
+            switch (condition) {
+                case "Ensoleillé":
+                case "Faiblement nuageux":
+                //return 'images/sun.jpg';
+                break;
+
+                case "Eclaircies":
+                doc.backgroundImage = "URL('images/eclaircie.jpg')";
+                break;
+
+                case "Fortement nuageux":
+                doc.backgroundImage = "URL('images/cumulus.jpg')";
+                break;
+
+                case 'Faiblement orageux':
+                doc.backgroundImage = "URL('images/storm-clouds.jpg')";
+                break;
+
+                default:
+                doc.backgroundImage = 'linear-gradient(red, yellow)';
+            }
+        }
+
 </script>
+
 
 </body>
 </html>
