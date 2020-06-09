@@ -9,8 +9,7 @@
         <link rel="stylesheet" href="css/css.css">
     </head>
     <body>
-    <!-- <body style="background-image: URL('images/sun.jpg')"> -->
-        <main id="main" >
+        <main id="main" v-bind:style="{ backgroundImage: 'url(' + imageFond + ')' }" >
         <div id="divVille">
             <!-- villes disponibles:  http://www.prevision-meteo.ch/services/json/list-cities -->
                 <h1>
@@ -34,7 +33,10 @@
             <!-- affiche la météo de la ville appelée -->
             <!-- tableau moche => TODO: tableau version Vue.js-->
             <div id="divMeteo" v-if="display">
-                <h2 id="villeMeteo">{{ villeMeteo }}</h2>
+                <h2 id="villeMeteo">
+                    {{ villeMeteo }} <br>
+                    <img v-bind:src= iconeConditionBig alt = "icone ciel">
+                </h2>
                 <p id="gps"> {{ gps }}</p>
                 <div id="tableMeteo">
                     Date: {{ donneesMeteo.date}} <br>
@@ -45,7 +47,8 @@
                     Direction du vent: {{ donneesMeteo.wnd_dir}} <br>
                     Pression atmosphérique: {{ donneesMeteo.pressure}} hPa <br>
                     Humidité: {{ donneesMeteo.humidity}} % <br>
-                    Condition: {{ donneesMeteo.condition }} <br>
+                    Condition: {{ donneesMeteo.condition }} 
+                    <img v-bind:src= iconeCondition alt = "icone ciel"> <br>
                 </div>
             </div>
 
@@ -68,7 +71,9 @@ var meteoApi = new Vue({
         selected: "nantes", //ville par défaut au démarrage
         donneesMeteo: {},
         display: false,
-        // styleFond: "images/sun.jpg"
+        imageFond: "",
+        iconeCondition: "",
+        iconeConditionBig: "",
     },
 
     mounted: function () {
@@ -98,8 +103,11 @@ var meteoApi = new Vue({
                     + " - longitude: " + data.city_info.longitude + ")";
 
                 self.donneesMeteo = data.current_condition;
-                // affichage de l'image de fond dans le body
-                selectBackgroundImage (data.current_condition.condition);
+                // affichage des icones selon condition météo
+                self.iconeConditionBig = data.current_condition.icon_big;
+                self.iconeCondition = data.current_condition.icon;
+                // affichage de l'image de fond dans le main selon condition météo
+                self.imageFond = selectBackgroundImage (data.current_condition.condition);
                 self.display = true;
             }
         };
@@ -116,37 +124,34 @@ var meteoApi = new Vue({
         // }
     }
 });
-        // TODO version Vue.js
-        //selection de l'image de fond dans le body selon les conditions météo
+        //selection de l'image de fond dans le main selon les conditions météo
         function selectBackgroundImage (condition) {
-            // console.log(condition);
-            condition = "Ensoleillé";
+            //console.log(condition);
+            //condition = "Ensoleillé";
             //condition = "Fortement nuageux";
             //alert("ok");
-            let doc = document.body.style;
-            //return "URL('images/sun.jpg')";
-        
+            //return 'images/sun.jpg';
+
             switch (condition) {
                 case "Ensoleillé":
                 case "Faiblement nuageux":
-                doc.backgroundImage = "URL('images/sun.jpg')";
-                //return 'images/sun.jpg';
+                return 'images/sun.jpg';
                 break;
 
                 case "Eclaircies":
-                doc.backgroundImage = "URL('images/eclaircie.jpg')";
+                return 'images/eclaircie.jpg';
                 break;
 
                 case "Fortement nuageux":
-                doc.backgroundImage = "URL('images/cumulus.jpg')";
+                return 'images/cumulus.jpg';
                 break;
 
                 case 'Faiblement orageux':
-                doc.backgroundImage = "URL('images/storm-clouds.jpg')";
+                return 'images/storm-clouds.jpg';
                 break;
 
                 default:
-                doc.backgroundImage = 'linear-gradient(red, yellow)';
+                return 'images/water1280.jpg';
             }
         }
 

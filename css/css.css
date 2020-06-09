@@ -7,10 +7,12 @@ body {
 }
 
 main {
+    height: 740px;
     display: flex;
     flex-direction: column;
     text-align: center;
     align-items: center;
+    background-size: cover;
 }
 
 #divMeteo {
