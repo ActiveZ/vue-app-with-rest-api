@@ -21,7 +21,6 @@
             </div>
 
             <!-- affiche la météo de la ville appelée -->
-            <!-- tableau moche => TODO: tableau version Vue.js-->
             <div id="divMeteo" v-if="display">
                 <h2 id="villeMeteo">
                     {{ villeMeteo }} <br>
@@ -63,16 +62,15 @@ var meteoApi = new Vue({
         donneesMeteo: {},
         display: false,
         imageFond: "",
-        // iconeCondition: "", // inutilisé
         iconeConditionBig: "",
     },
 
     mounted: function () {
-		    this.meteo() // avec ville par défaut au démarrage = "nantes"
+		    this.meteo() // avec ville par défaut au démarrage = "Nantes"
 		  },
 
     watch: {
-        selected: function (val) {
+        selected: function (val) { // val: inutilisé
         this.meteo()
         }
     },
@@ -87,8 +85,6 @@ var meteoApi = new Vue({
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 let data = JSON.parse(this.responseText);
-                //console.log(data);
-                //console.log(data.current_condition);
                 villeMeteo = "METEO DE " + data.city_info.name.toUpperCase();
                 gps = "(latitude: " + data.city_info.latitude 
                     + " - longitude: " + data.city_info.longitude + ")";
@@ -96,12 +92,12 @@ var meteoApi = new Vue({
                 self.donneesMeteo = data.current_condition;
                 // affichage des icones selon condition météo
                 self.iconeConditionBig = data.current_condition.icon_big;
-                // self.iconeCondition = data.current_condition.icon; // inutilisé
                 // affichage de l'image de fond dans le main selon condition météo
                 self.imageFond = selectBackgroundImage (data.current_condition.condition);
                 self.display = true;
             }
         };
+        //TODO: gestion erreurs
         xhttp.open("GET", req, true);
         xhttp.send();
         }
@@ -121,32 +117,32 @@ var meteoApi = new Vue({
             switch (condition) {
                 case "Ensoleillé":
                 case "Faiblement nuageux":
-                return 'images/sun.jpg';
-                break;
+                    return 'images/sun.jpg';
+                    break;
 
                 case "Eclaircies":
-                return 'images/eclaircie.jpg';
-                break;
+                    return 'images/eclaircie.jpg';
+                    break;
 
                 case "Fortement nuageux":
-                return 'images/cumulus.jpg';
-                break;
+                    return 'images/cumulus.jpg';
+                    break;
 
                 case 'Faiblement orageux':
-                return 'images/storm-clouds.jpg';
-                break;
+                    return 'images/storm-clouds.jpg';
+                    break;
 
                 case 'Averses de pluie faible':
                 case 'Pluie faible':
-                return 'images/rain1920.jpg';
-                break;
+                    return 'images/rain1920.jpg';
+                    break;
 
                 case 'Ciel voilé':
-                return 'images/cielVoile1920.jpg';
-                break;
+                    return 'images/cielVoile1920.jpg';
+                    break;
 
                 default:
-                return 'images/water1280.jpg';
+                    return 'images/water1280.jpg';
             }
         }
 
