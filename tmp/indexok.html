@@ -101,6 +101,14 @@ var meteoApi = new Vue({
         xhttp.open("GET", req, true);
         xhttp.send();
         }
+
+
+        // pourquoi l'appel à cette fonction ne marche pas ? => je la sors en js natif en dessous
+        // //selection de l'image de fond selon les conditions météo
+        // selectBackgroundImage: function(condition) {
+        //     console.log(condition);
+        //     alert ("ok2");
+        // }
     }
 });
         //selection de l'image de fond dans le main selon les conditions météo
@@ -140,6 +148,7 @@ var meteoApi = new Vue({
         }
 
 </script>
+
 
 </body>
 </html>
