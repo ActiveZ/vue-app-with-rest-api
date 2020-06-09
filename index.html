@@ -28,18 +28,17 @@
                     <img v-bind:src= iconeConditionBig alt = "icone ciel">
                 </h2>
                 <p id="gps"> {{ gps }}</p>
-                <div id="tableMeteo">
-                    Date: {{ donneesMeteo.date}} <br>
-                    Heure: {{ donneesMeteo.hour}} <br>
-                    Température: {{ donneesMeteo.tmp}} °C<br>
-                    vitesse du vent: {{ donneesMeteo.wnd_spd}} Km/h<br>
-                    Rafales: {{ donneesMeteo.wnd_gust}} Km/h<br>
-                    Direction du vent: {{ donneesMeteo.wnd_dir}} <br>
-                    Pression atmosphérique: {{ donneesMeteo.pressure}} hPa <br>
-                    Humidité: {{ donneesMeteo.humidity}} % <br>
-                    Actuellement: {{ donneesMeteo.condition }} 
-                    <img v-bind:src= iconeCondition alt = "icone ciel"> <br>
-                </div>
+                <table id="tableMeteo">
+                    <tr><td>Date: </td><td>{{ donneesMeteo.date}}</td></tr>
+                    <tr><td>Heure:</td><td>{{ donneesMeteo.hour}}</td></tr>
+                    <tr><td>Température:</td><td>{{ donneesMeteo.tmp}} °C</td></tr>
+                    <tr><td>Vitesse du vent:</td><td>{{ donneesMeteo.wnd_spd}} Km/h</td></tr>
+                    <tr><td>Rafales:</td><td>{{ donneesMeteo.wnd_gust}} Km/h</td></tr>
+                    <tr><td>Direction du vent:</td><td>{{ donneesMeteo.wnd_dir}}</td></tr>
+                    <tr><td>Pression atmosphérique:</td><td>{{ donneesMeteo.pressure}} hPa</td></tr>
+                    <tr><td>Humidité:</td><td>{{ donneesMeteo.humidity}} %</td></tr>
+                    <tr><td>Actuellement:</td><td>{{ donneesMeteo.condition}}</td></tr>
+                </table>
             </div>
 
             <!-- spin-loader d'attente -->
@@ -64,7 +63,7 @@ var meteoApi = new Vue({
         donneesMeteo: {},
         display: false,
         imageFond: "",
-        iconeCondition: "",
+        // iconeCondition: "", // inutilisé
         iconeConditionBig: "",
     },
 
@@ -97,7 +96,7 @@ var meteoApi = new Vue({
                 self.donneesMeteo = data.current_condition;
                 // affichage des icones selon condition météo
                 self.iconeConditionBig = data.current_condition.icon_big;
-                self.iconeCondition = data.current_condition.icon;
+                // self.iconeCondition = data.current_condition.icon; // inutilisé
                 // affichage de l'image de fond dans le main selon condition météo
                 self.imageFond = selectBackgroundImage (data.current_condition.condition);
                 self.display = true;

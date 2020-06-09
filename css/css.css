@@ -24,7 +24,7 @@ main {
     opacity: 0.8;
 }
 
-#tableMeteo {
+#tableMeteo, #tm {
     text-align: left;
 }
 
